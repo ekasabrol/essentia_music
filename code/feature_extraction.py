@@ -6,11 +6,7 @@ Created on Tue Feb 23 11:15:10 2021
 @author: sanjamekas
 """
 
-import os
-songs = os.listdir('/content/drive/MyDrive/songs')
-songs = songs 
-
-def feature_extracction(songs):
+def feature_extraction(songs):
     column_name = ['Name', 'gender']
     df = pd.DataFrame(columns = column_name)
     
@@ -45,4 +41,3 @@ def feature_extracction(songs):
       
     return df
 
-feature_extraction(songs)
