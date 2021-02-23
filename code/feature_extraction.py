@@ -48,7 +48,8 @@ def feature_extraction(songs):
     
         #pushing every df to end; by taking index size
         df.loc[len(df.index)] = features
-      
+    
+    df.to_csv(r'/content/musictable.csv', encoding='utf-8', index = False)
     return df
 
 
