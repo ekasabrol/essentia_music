@@ -5,6 +5,9 @@ Created on Tue Feb 23 11:15:10 2021
 
 @author: sanjamekas
 """
+songs = os.listdir('/content/drive/MyDrive/songs')
+songs = songs
+
 
 def feature_extraction(songs):
     column_name = ['Name', 'gender']
@@ -41,3 +44,5 @@ def feature_extraction(songs):
       
     return df
 
+
+feature_extraction(songs)
