@@ -5,6 +5,14 @@ Created on Tue Feb 23 11:15:10 2021
 
 @author: sanjamekas
 """
+import sys
+import subprocess
+
+# implement pip as a subprocess:
+subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'essentia'])
+subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'essentia-tensorflow'])
+
+
 import numpy as np
 import pandas as pd
 from essentia.standard import *
