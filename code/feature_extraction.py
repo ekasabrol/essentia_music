@@ -5,7 +5,13 @@ Created on Tue Feb 23 11:15:10 2021
 
 @author: sanjamekas
 """
+import numpy as np
+import pandas as pd
+from essentia.standard import *
+import re 
 import os
+
+
 songs = os.listdir('/content/drive/MyDrive/songs')
 songs = songs
 
