@@ -26,8 +26,7 @@ songs = songs
 
 def feature_extraction(songs):
   column = ['SongName','Genre','BPM','gender','danceable',
-            'speechiness',  'tonal', 'classic', 'dance', 
-            'hip hop', 'jazz','pop', 'rnb', 'rock', 'speech', 'mood_acoustic',
+            'speechiness',  'tonal', 'mood_acoustic',
             'mood_aggressive','mood_electronic', 'mood_happy',
             'mood_party', 'mood_relaxed', 'mood_sad']
 
@@ -89,11 +88,6 @@ def feature_extraction(songs):
     tones = np.mean(predict, axis=0)
     tonal = round(tones[0],2)
 
-    #weighted_genre
-    predict = TensorflowPredictVGGish(graphFilename = '/content/essentia_music/packages/genre_rosamerica-vggish-audioset-1.pb')(audio)
-    gen = np.mean(predict, axis=0)
-    classic, dance, hiphop, jazz, pop, rnb, rock, speech = gen[0], gen[1], gen[2],gen[3], gen[4], gen[5], gen[6], gen[7]
-
     #mood_acoustic
     predict = TensorflowPredictMusiCNN(graphFilename = '/content/essentia_music/packages/mood_acoustic-musicnn-msd-2.pb')(audio)
     acoust = np.mean(predict, axis=0)
@@ -132,8 +126,7 @@ def feature_extraction(songs):
     #making a list of lists of all features corresponding to our DataFrame labels
 
     features = [name,[genre], bpm, [gender], [danceable],
-                [speechiness],[tonal],[classic], [dance], [hiphop], 
-                [jazz], [pop], [rnb], [rock], [speech],[acoustic],[aggressive],
+                [speechiness],[tonal],[acoustic],[aggressive],
                 [electronic], [happy], [party], [relaxed], [sad]]
     #pushing every df to end; by taking index size
     df.loc[len(df.index)] = features
