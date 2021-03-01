@@ -128,6 +128,8 @@ def feature_extraction(songs):
     features = [name,[genre], bpm, [gender], [danceable],
                 [speechiness],[tonal],[acoustic],[aggressive],
                 [electronic], [happy], [party], [relaxed], [sad]]
+    features = [item for sublist in features for item in sublist]
+    
     #pushing every df to end; by taking index size
     df.loc[len(df.index)] = features
     
