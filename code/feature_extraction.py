@@ -25,14 +25,18 @@ songs = songs
 
 
 def feature_extraction(songs):
-  column = ['SongName','Genre','BPM','gender','danceability',
-            'speechiness',  'tonal', 'mood_acoustic',
+  column = ['SongName','Genre','BPM','gender','key_name', 'key_scale', 'key_strength',
+            'danceability','speechiness',  'tonal', 'mood_acoustic',
             'mood_aggressive','mood_electronic', 'mood_happy',
             'mood_party', 'mood_relaxed', 'mood_sad', 'classic', 'dance', 
             'hip hop', 'jazz','pop', 'rnb', 'rock', 'speech', 'bpm_firstPeakBPM', 
             'bpm_firstPeakWeight', 'bpm_firstPeakSpread', 'bpm_secondPeakBPM', 'bpm_secondPeakWeight', 'bpm_secondPeakSpread',
             'dortmund_alternative', 'dortmund_blues', 'dortmund_electronic', 'dortmund_folkcountr', 
-            'dortmund_funksoulrnb', 'dortmund_jazz', 'dortmund_pop', 'dortmund_raphiphop', 'dortmund_rock']
+            'dortmund_funksoulrnb', 'dortmund_jazz', 'dortmund_pop', 'dortmund_raphiphop', 'dortmund_rock',
+            'electronic_ambient', 'electronic_dnb', 'electronic_house', 'electronic_techno', 'electronic_trance',
+            "rosamerica_cla", "rosamerica_dan", "rosamerica_hip", "rosamerica_jaz", "rosamerica_pop", "rosamerica_rhy", "rosamerica_roc", "rosamerica_spe",
+            'tzanetakis_blu', 'tzanetakis_cla', 'tzanetakis_cou', 'tzanetakis_dis', 
+            'tzanetakis_hip', 'tzanetakis_jaz', 'tzanetakis_met', 'tzanetakis_pop', 'tzanetakis_reg', 'tzanetakis_roc']
 
   #Data Frame Initialization; we pass no data, but label column features
   df = pd.DataFrame(columns = column) 
@@ -66,6 +70,10 @@ def feature_extraction(songs):
     getRhythmExtractor = RhythmExtractor2013()
     (bpm,ticks,confidence,estimates,bpmIntervals) = getRhythmExtractor(audio1)
     bpm = [round(bpm,2)]
+
+    #keys_info
+    getkey = KeyExtractor()
+    (key_name, key_scale, key_strength) = getkey(audio1)
 
     #female/male - we do binomial classification by rounding off to 1 0 for female; 1 for male
     predict = TensorflowPredictMusiCNN(graphFilename='/content/essentia_pckgs/gender-musicnn-msd-2.pb')(audio)
@@ -142,15 +150,35 @@ def feature_extraction(songs):
     dort = np.mean(predict, axis=0)
     dortmund_alternative, dortmund_blues, dortmund_electronic, dortmund_folkcountr, dortmund_funksoulrnb, dortmund_jazz, dortmund_pop, dortmund_raphiphop, dortmund_rock = dort[0], dort[1], dort[2], dort[3], dort[4], dort[5], dort[6], dort[7], dort[8]
 
+    #genre_electronic
+    predict = TensorflowPredictMusiCNN(graphFilename = '/content/essentia_pckgs/genre_electronic-musicnn-msd-2.pb')(audio)
+    elect = np.mean(predict, axis=0)
+    electronic_ambient, electronic_dnb, electronic_house, electronic_techno, electronic_trance = elect[0],elect[1],elect[2],elect[3],elect[4] 
+
+    #genre rosamerica
+    predict = TensorflowPredictMusiCNN(graphFilename = '/content/essentia_pckgs/genre_rosamerica-musicnn-msd-2.pb')(audio)
+    rose = np.mean(predict, axis=0)
+    rosamerica_cla, rosamerica_dan, rosamerica_hip, rosamerica_jaz, rosamerica_pop, rosamerica_rhy, rosamerica_roc, rosamerica_spe = rose[0], rose[1], rose[2],rose[3], rose[4], rose[5], rose[6], rose[7]
+
+    #genre tzanetakis
+    predict = TensorflowPredictMusiCNN(graphFilename = '/content/essentia_pckgs/genre_tzanetakis-musicnn-msd-2.pb')(audio)
+    t = np.mean(predict, axis=0)
+    tzanetakis_blu, tzanetakis_cla, tzanetakis_cou, tzanetakis_dis, tzanetakis_hip, tzanetakis_jaz, tzanetakis_met, tzanetakis_pop, tzanetakis_reg, tzanetakis_roc = t[0], t[1], t[2], t[3], t[4], t[5], t[6], t[7], t[8], t[9]
+
+
     #making a list of lists of all features corresponding to our DataFrame labels
 
-    features = [name,[genre], bpm, [gender], [danceable],
+    features = [name,[genre], bpm, [gender],[key_name], [key_scale],[key_strength], [danceable],
                 [speechiness],[tonal],[acoustic],[aggressive],
                 [electronic], [happy], [party], [relaxed], [sad], [classic], [dance], [hiphop], 
                 [jazz], [pop], [rnb], [rock], [speech], [bpm_firstPeakBPM], 
                 [bpm_firstPeakWeight], [bpm_firstPeakSpread], [bpm_secondPeakBPM], [bpm_secondPeakWeight], [bpm_secondPeakSpread], 
                 [dortmund_alternative], [dortmund_blues], [dortmund_electronic], [dortmund_folkcountr], 
-                [dortmund_funksoulrnb], [dortmund_jazz], [dortmund_pop], [dortmund_raphiphop], [dortmund_rock]]
+                [dortmund_funksoulrnb], [dortmund_jazz], [dortmund_pop], [dortmund_raphiphop], [dortmund_rock],
+                [electronic_ambient], [electronic_dnb], [electronic_house], [electronic_techno], [electronic_trance],
+                [rosamerica_cla], [rosamerica_dan], [rosamerica_hip], [rosamerica_jaz], [rosamerica_pop], [rosamerica_rhy], [rosamerica_roc], [rosamerica_spe],
+                [tzanetakis_blu], [tzanetakis_cla], [tzanetakis_cou], [tzanetakis_dis], [tzanetakis_hip], [tzanetakis_jaz], [tzanetakis_met], 
+                [tzanetakis_pop], [tzanetakis_reg], [tzanetakis_roc]]
 
     features = [item for sublist in features for item in sublist]
     #pushing every df to end; by taking index size
