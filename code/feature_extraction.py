@@ -50,11 +50,11 @@ def feature_extraction(songs):
 
   #running a for loop for each song
   for i in range(0,len(songs)):
-    music = "/content/clips/{}".format(songs[i])
+    music = "/content/{}".format(songs[i])
 
     #Extract Name of Song
     sr = 16000
-    pattern = re.compile(r'(?<=clips[/]).*')
+    pattern = re.compile(r'(?<=content[/]).*')
     name = pattern.findall(music)
 
 
