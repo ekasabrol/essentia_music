@@ -20,8 +20,15 @@ import re
 import os
 
 
-songs = os.listdir('/content/clips')
-songs = songs
+dir_path = "/content"
+songs = []
+for root, dirs, files in os.walk(dir_path): 
+    for file in files:  
+  
+        # change the extension from '.mp3' to  
+        # the one of your choice. 
+        if file.endswith('.mp3'): 
+          songs.append(file)
 
 
 def feature_extraction(songs):
