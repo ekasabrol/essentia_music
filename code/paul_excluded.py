@@ -1,3 +1,4 @@
+pip install google-cloud-storage
 from google.cloud import bigquery
 import os
 
